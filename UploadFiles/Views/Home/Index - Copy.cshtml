@@ -1,0 +1,76 @@
+﻿@model UploadFiles.Models.DataModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@using (Html.BeginForm("Submit", "ReportFile", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form-data" }))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(t => t.Name)
+        @Html.TextBoxFor(t => t.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(t => t.Description)
+        @Html.TextAreaFor(t => t.Description, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <div id="images"></div>
+
+        @Html.TextBoxFor(t => t.File, new { @type = "file", @multiple = "multiple", @name = "uploadfile", @id = "uploadfile" })
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+}
+
+@section scripts{
+    <script>
+        function del(data) {
+            console.log(data);
+        }
+
+        $('.delete-img').on('click', function () {
+            console.log(this);
+        });
+
+        $('#images').delegate('.delete-img', 'click', function () {
+            const img = $(this).data('img');
+            const size = $(this).data('size');
+            //console.log(img, size)
+            //let files = Array.from($("#uploadfile").prop("files"));
+            //console.log(files);
+            //const f = files.find(t => t.name = img && t.size == size);
+            //const index = files.indexOf(f);
+            //files.splice(index,1);
+            $('#images').empty();
+            var totalFiles = document.getElementById("uploadfile").files.length;
+            for (var i = 0; i < totalFiles; i++) {
+                var file = document.getElementById("uploadfile").files[i];
+                if (file.name == img && file.size == size) {
+                    document.getElementById("uploadfile").files[i] = null;
+                } else {
+                    bindFile(file);
+                }
+               
+            }
+
+        });
+
+        $("#uploadfile").on("change", function () {
+            $('#images').empty();
+            var totalFiles = document.getElementById("uploadfile").files.length;
+            for (var i = 0; i < totalFiles; i++) {
+                var file = document.getElementById("uploadfile").files[i];
+                console.log(file);
+                bindFile(file);
+            }
+        });
+
+        function bindFile(file) {
+            
+            $('#images').append('<p>' + file.name + '<span data-img=' + file.name + ' data-size=' + file.size + ' class="delete-img">x</span> </p> ');
+        }
+    </script>
+
+}
