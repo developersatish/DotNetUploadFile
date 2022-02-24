@@ -38,6 +38,7 @@
         <div id="img-preview-div"></div>
         <div style="visibility:hidden">
             @Html.TextBoxFor(t => t.File, new { @type = "file", @multiple = "multiple", @name = "uploadfile", @id = "uploadfile" })
+            @*@Html.TextBoxFor(t => t.File, new { @type = "file", @multiple = "multiple", @name = Html.NameFor(t=>t.File), @id = Html.IdFor(t=>t.File) })*@
         </div>
         <button type="button" id="uploadbtn" class="btn btn-sm btn-default">Upload File</button>
     </div>
@@ -54,7 +55,13 @@
             const size = $(this).data('size');
             const file = fileData.find(t => t.name = name && t.size == size);
             const index = fileData.indexOf(file);
-            (index == 0 && fileData.length == 1) ? [] : fileData.splice(index, 1);
+            if (index == 0 && fileData.length == 1) {
+                fileData = [];
+                $("#MyFile_File").val('');
+            } else {
+                fileData.splice(index, 1);
+            }
+
             bindFile();
 
         });
